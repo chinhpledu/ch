@@ -1,0 +1,28 @@
+version: "3"
+services:
+    mysql:
+      image: mysql:latest
+      ports:
+        - "3341:3306"
+      environment:
+        MYSQL_ROOT_PASSWORD: ""
+        MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+        MYSQL_DATABASE: 'tinode'
+      container_name: mysql
+      networks:
+            - ch_net
+    server:
+      build:
+        context: .
+        dockerfile: server/Dockerfile
+      ports:
+        - "9001:9001"
+      volumes:
+        - ./server/core:/server/core:cached
+      links:
+        - mysql:mysql
+      container_name: server
+      networks:
+            - ch_net
+networks:
+  ch_net:
